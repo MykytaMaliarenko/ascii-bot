@@ -1,5 +1,5 @@
 import re
-import ascii
+from number_systems import MyBinary, MyASCII, MyHex
 from telegram.ext import Dispatcher, MessageHandler, Filters, CallbackQueryHandler
 from telegram.update import Update, Message
 from telegram.ext.callbackcontext import CallbackContext
@@ -17,22 +17,18 @@ def start(update: Update, context: CallbackContext):
 
 encode_ascii_action, decode_binary, decode_hex = range(3)
 
-ASCII_REGEX = r"^[?!\().\dA-z]+$"
-BINARY_REGEX = r"^[0-1\s\n]+$"
-HEX_REGEX = r"^[0-9A-e]+$"
-
 
 def on_text_input(update: Update, context: CallbackContext):
     message: Message = update.message
 
     keyboard = []
-    if bool(re.fullmatch(ASCII_REGEX, message.text)):
+    if bool(re.fullmatch(r"[A-z]", message.text)):
         keyboard.append([InlineKeyboardButton("Перевести в ASCII", callback_data=str(encode_ascii_action))])
 
-    if bool(re.fullmatch(BINARY_REGEX, message.text)):
+    if MyBinary.is_binary(message.text):
         keyboard.append(([InlineKeyboardButton("Перевести из ASCII", callback_data=str(decode_binary))]))
 
-    if bool(re.fullmatch(HEX_REGEX, message.text)):
+    if MyHex.is_hex(message.text):
         keyboard.append([InlineKeyboardButton("Перевести из 16-системы", callback_data=str(decode_hex))])
 
     message.reply_text("Доступные действия:", reply_markup=InlineKeyboardMarkup(keyboard), quote=True)
@@ -63,27 +59,37 @@ def on_encode_ascii_by(update: Update, context: CallbackContext):
     msg: Message = query.message
     reply_to: Message = msg.reply_to_message
 
+    user_txt = reply_to.text
     if query.data == str(encode_by_pairing_action):
-        txt = "ASCII парность:\n" + str(ascii.encode_by_pairing(ascii.text_to_binary(reply_to.text)))
+        txt = "ASCII парность:\n" + MyASCII(text=user_txt).to_str_by_pairing()
     elif query.data == str(encode_by_unpaired_action):
-        txt = "ASCII непарность:\n" + str(ascii.encode_by_unpaired(ascii.text_to_binary(reply_to.text)))
+        txt = "ASCII непарность:\n" + MyASCII(text=user_txt).to_str_by_unpaired()
     else:
-        txt = "ASCII парность:\n" + str(ascii.encode_by_pairing(ascii.text_to_binary(reply_to.text))) + \
-              "\n\nASCII непарность:\n" + str(ascii.encode_by_unpaired(ascii.text_to_binary(reply_to.text)))
+        txt = "ASCII парность:\n" + MyASCII(text=user_txt).to_str_by_pairing() + \
+              "\n\nASCII непарность:\n" + MyASCII(text=user_txt).to_str_by_unpaired()
 
     msg.edit_text(txt)
+
+
+decode_encoded_by_ascii, decode_encoded_by_binary = range(20, 22)
 
 
 def on_decode_ascii(update: Update, context: CallbackContext):
     query: CallbackQuery = update.callback_query
     msg: Message = query.message
-    reply_to: Message = msg.reply_to_message
 
-    msg.edit_text(ascii.from_binary_to_text(ascii.from_ascii_to_binary(reply_to.text)))
+    keyboard = [
+        [
+            InlineKeyboardButton("ASCII", callback_data=str(decode_encoded_by_ascii)),
+        ],
+        [
+            InlineKeyboardButton("просто бинарный текст", callback_data=str(decode_encoded_by_binary))
+        ]
+    ]
+
+    msg.edit_text("Текст был закодирован с помощтю:", reply_markup=InlineKeyboardMarkup(keyboard))
 
 
-def on_decode_hex(update: Update, context: CallbackContext):
-    pass
 
 
 handlers = {
