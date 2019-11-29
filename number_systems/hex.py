@@ -10,19 +10,23 @@ class MyHex(list):
 
     def __init__(self, binary: MyBinary = None, hex_text: str = ""):
         super().__init__()
-        if binary:
+        if binary is not None:
             self.binary = binary
         elif hex_text:
             hex_text = hex_text.replace(" ", '')
             res = ""
             while len(hex_text) > 0:
-                res += "{0:b}".format(int(hex_text[:2], 16))
+                raw = "{0:b}".format(int(hex_text[:2], 16))
+                if len(raw) < 7:
+                    raw = "0" * (7 - len(raw)) + raw
+                res += raw
                 hex_text = hex_text[2:]
             self.binary = MyBinary(binary_text=res)
 
     def to_hex_text(self) -> str:
         res = ""
         for el in self.binary.to_int():
+            print(el, " ", chr(el))
             raw = hex(el)
             res += raw[raw.index("x") + 1:] + " "
         return res
@@ -33,5 +37,5 @@ class MyHex(list):
 
 
 if __name__ == "__main__":
-    temp = MyHex(hex_text="4d 59 4b 59 54 41")
-    print(temp.binary.to_text())
+    temp = MyHex(binary=MyBinary(text="dsfsfs \nsad"))
+    print(temp.to_hex_text())

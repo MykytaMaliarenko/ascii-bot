@@ -1,6 +1,6 @@
 import re
 
-BINARY_REGEX = r"^[0-1\s\n]+$"
+BINARY_REGEX = r"^[0-1\s]+$"
 
 
 class MyBinary(list):
@@ -60,6 +60,6 @@ class MyBinary(list):
 
 
 if __name__ == "__main__":
-    binary = MyBinary(ascii_text="110011011101100111001011110110010101010011000001")
+    binary = MyBinary(text="dsfsfs \nsad")
     binary_txt = str(binary)
     print(binary.to_text())

@@ -63,7 +63,10 @@ def on_encode_ascii_by(update: Update, context: CallbackContext):
     msg: Message = query.message
     reply_to: Message = msg.reply_to_message
 
-    user_txt = reply_to.text
+    user_txt: str = reply_to.text
+    user_txt = user_txt.replace(" ", "")
+    user_txt = user_txt.replace("\n", "")
+    user_txt = user_txt.replace("\t", "")
     if query.data == str(encode_by_pairing_action):
         txt = "ASCII парность:\n" + MyASCII(text=user_txt).to_str_by_pairing()
     elif query.data == str(encode_by_unpaired_action):
@@ -80,8 +83,11 @@ def on_encode_hex(update: Update, context: CallbackContext):
     msg: Message = query.message
     reply_to: Message = msg.reply_to_message
 
-    user_txt = reply_to.text
-    txt = MyHex(MyBinary(text=user_txt)).to_hex_text()
+    user_txt: str = reply_to.text
+    user_txt = user_txt.replace(" ", "")
+    user_txt = user_txt.replace("\n", "")
+    user_txt = user_txt.replace("\t", "")
+    txt = MyHex(binary=MyBinary(text=user_txt)).to_hex_text()
     msg.edit_text(txt)
 
 
@@ -90,7 +96,10 @@ def on_decode_hex(update: Update, context: CallbackContext):
     msg: Message = query.message
     reply_to: Message = msg.reply_to_message
 
-    user_txt = reply_to.text
+    user_txt: str = reply_to.text
+    user_txt = user_txt.replace(" ", "")
+    user_txt = user_txt.replace("\n", "")
+    user_txt = user_txt.replace("\t", "")
     txt = MyHex(hex_text=user_txt).binary.to_text()
     msg.edit_text(txt)
 
