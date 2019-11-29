@@ -33,8 +33,8 @@ def encode_by_unpaired(binary_text: list) -> ASCIIList:
     return encoded
 
 
-def binary_to_hex(binary_text: list) -> list:
-    hex_text = []
+def binary_to_hex(binary_text: list) -> ASCIIList:
+    hex_text = ASCIIList()
     for elem in binary_text:
         h = hex(int(elem, 2))
         hex_text.append(h[h.index("x") + 1:])
@@ -65,9 +65,34 @@ def from_ascii_to_binary(txt: str) -> str:
     return res
 
 
+def from_hex_to_binary(txt: str) -> str:
+    txt = txt.replace(" ", "")
+    txt = txt.replace("\n", "")
+    txt = txt.replace("\t", "")
+
+    res = ""
+    while len(txt) > 0:
+        res += "{0:b}".format(int(txt[:2], 16))
+        txt = txt[2:]
+    return res
+
+
+def from_hex_to_str(txt: str) -> str:
+    txt = txt.replace(" ", "")
+    txt = txt.replace("\n", "")
+    txt = txt.replace("\t", "")
+
+    res = ""
+    while len(txt) > 0:
+        res += chr(int(txt[:2], 16))
+        txt = txt[2:]
+    return res
+
+
 if __name__ == "__main__":
     res = text_to_binary("MYKYTA")
     print(res)
     print(encode_by_pairing(res))
-    print(from_binary_to_text(from_ascii_to_binary(str(encode_by_pairing(res)))))
+    print(from_ascii_to_binary(from_hex_to_binary("4d 59 4b 59 d4 41")))
+    #print(from_binary_to_text(from_ascii_to_binary(str(encode_by_pairing(res)))))
     print(binary_to_hex(encode_by_pairing(res)))

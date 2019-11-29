@@ -41,7 +41,7 @@ def on_text_input(update: Update, context: CallbackContext):
 encode_by_pairing_action, encode_by_unpaired_action, ascii_encode_both_action = range(10, 13)
 
 
-def encode_ascii(update: Update, context: CallbackContext):
+def on_encode_ascii(update: Update, context: CallbackContext):
     query: CallbackQuery = update.callback_query
     msg: Message = query.message
 
@@ -58,7 +58,7 @@ def encode_ascii(update: Update, context: CallbackContext):
     msg.edit_text("Перевести в ASCII по:", reply_markup=InlineKeyboardMarkup(keyboard))
 
 
-def encode_ascii_by(update: Update, context: CallbackContext):
+def on_encode_ascii_by(update: Update, context: CallbackContext):
     query: CallbackQuery = update.callback_query
     msg: Message = query.message
     reply_to: Message = msg.reply_to_message
@@ -74,12 +74,16 @@ def encode_ascii_by(update: Update, context: CallbackContext):
     msg.edit_text(txt)
 
 
-def decode_ascii(update: Update, context: CallbackContext):
+def on_decode_ascii(update: Update, context: CallbackContext):
     query: CallbackQuery = update.callback_query
     msg: Message = query.message
     reply_to: Message = msg.reply_to_message
 
     msg.edit_text(ascii.from_binary_to_text(ascii.from_ascii_to_binary(reply_to.text)))
+
+
+def on_decode_hex(update: Update, context: CallbackContext):
+    pass
 
 
 handlers = {
@@ -89,13 +93,13 @@ handlers = {
 default_handler = on_text_input
 
 callback_handlers = {
-    str(encode_ascii_action): encode_ascii,
-    str(decode_binary): decode_ascii,
+    str(encode_ascii_action): on_encode_ascii,
+    str(decode_binary): on_decode_ascii,
     str(decode_hex): None,
 
-    str(encode_by_pairing_action): encode_ascii_by,
-    str(encode_by_unpaired_action): encode_ascii_by,
-    str(ascii_encode_both_action): encode_ascii_by,
+    str(encode_by_pairing_action): on_encode_ascii_by,
+    str(encode_by_unpaired_action): on_encode_ascii_by,
+    str(ascii_encode_both_action): on_encode_ascii_by,
 }
 
 
