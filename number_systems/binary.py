@@ -37,13 +37,21 @@ class MyBinary(list):
     def __str__(self):
         res = ""
         for el in self.data:
-            res += "{0:b}".format(el) + " "
+            raw = "{0:b}".format(el)
+            if len(raw) < 7:
+                raw = "0" * (7 - len(raw)) + raw
+
+            res += raw + " "
         return res
 
     def to_binary_list(self) -> list:
         res = []
         for el in self.data:
-            res.append("{0:b}".format(el))
+            raw = "{0:b}".format(el)
+            if len(raw) < 7:
+                raw = "0" * (7 - len(raw)) + raw
+
+            res.append(raw)
         return res
 
     @staticmethod

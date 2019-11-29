@@ -45,5 +45,5 @@ class MyASCII(list):
 
 
 if __name__ == "__main__":
-    temp = MyASCII(binary_text="01001101 01011001 01001011 01011001 11010100 01000001 ")
+    temp = MyASCII(binary_text="01110100 01100101 11110011 01110100 10100000 10110001 10100000 10110010 10100000 00110011")
     print(temp.binary.to_text())
