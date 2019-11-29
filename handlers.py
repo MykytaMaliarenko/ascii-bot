@@ -18,7 +18,7 @@ def start(update: Update, context: CallbackContext):
 encode_ascii_action, decode_binary, decode_hex = range(3)
 
 ASCII_REGEX = r"^[?!\().\dA-z]+$"
-BINARY_REGEX = r"^[0-1]+$"
+BINARY_REGEX = r"^[0-1\s\n]+$"
 HEX_REGEX = r"^[0-9A-e]+$"
 
 
@@ -74,25 +74,12 @@ def encode_ascii_by(update: Update, context: CallbackContext):
     msg.edit_text(txt)
 
 
-decode_by_pairing_action, decode_by_unpaired_action = range(20, 22)
-
-
 def decode_ascii(update: Update, context: CallbackContext):
     query: CallbackQuery = update.callback_query
     msg: Message = query.message
+    reply_to: Message = msg.reply_to_message
 
-    keyboard = [
-        [
-            InlineKeyboardButton("парности", callback_data=str(decode_by_pairing_action)),
-            InlineKeyboardButton("непарности", callback_data=str(decode_by_unpaired_action)),
-        ],
-    ]
-
-    msg.edit_text("Перевести из ASCII по:", reply_markup=InlineKeyboardMarkup(keyboard))
-
-
-def decode_ascii_by(update: Update, context: CallbackContext):
-
+    msg.edit_text(ascii.from_binary_to_text(ascii.from_ascii_to_binary(reply_to.text)))
 
 
 handlers = {
@@ -103,15 +90,12 @@ default_handler = on_text_input
 
 callback_handlers = {
     str(encode_ascii_action): encode_ascii,
-    str(decode_binary): None,
+    str(decode_binary): decode_ascii,
     str(decode_hex): None,
 
     str(encode_by_pairing_action): encode_ascii_by,
     str(encode_by_unpaired_action): encode_ascii_by,
     str(ascii_encode_both_action): encode_ascii_by,
-
-    str(decode_by_pairing_action): decode_ascii_by,
-    str(decode_by_pairing_action): decode_ascii_by,
 }
 
 
