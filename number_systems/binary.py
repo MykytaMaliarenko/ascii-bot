@@ -63,5 +63,3 @@ if __name__ == "__main__":
     binary = MyBinary(ascii_text="110011011101100111001011110110010101010011000001")
     binary_txt = str(binary)
     print(binary.to_text())
-    #binary_from_binary = MyBinary(binary_text=binary_txt)
-    #print(MyBinary.is_binary(str(binary_from_binary)))

@@ -22,15 +22,15 @@ def on_text_input(update: Update, context: CallbackContext):
     message: Message = update.message
 
     keyboard = []
-    if bool(re.fullmatch(r'[!@#$%^&*(),.?":{};|<>№A-z0-9]+', message.text)):
+    if bool(re.fullmatch(r'^[!@#$%^&*(),.?":{};|<>№A-z0-9\s]+$', message.text)):
         keyboard.append([InlineKeyboardButton("Перевести в ASCII", callback_data=str(encode_ascii_action))])
         keyboard.append([InlineKeyboardButton("Перевести в 16-систему", callback_data=str(encode_hex))])
 
     if MyBinary.is_binary(message.text):
-        keyboard.append(([InlineKeyboardButton("Перевести из ASCII", callback_data=str(decode_binary))]))
+        keyboard.append(([InlineKeyboardButton("Перевести из 2-ичной системы", callback_data=str(decode_binary))]))
 
     if MyHex.is_hex(message.text):
-        keyboard.append([InlineKeyboardButton("Перевести из 16-системы", callback_data=str(decode_hex))])
+        keyboard.append([InlineKeyboardButton("Перевести из 16-ичной системы", callback_data=str(decode_hex))])
 
     if len(keyboard) != 0:
         message.reply_text("Доступные действия:", reply_markup=InlineKeyboardMarkup(keyboard), quote=True)
@@ -72,6 +72,26 @@ def on_encode_ascii_by(update: Update, context: CallbackContext):
         txt = "ASCII парность:\n" + MyASCII(text=user_txt).to_str_by_pairing() + \
               "\n\nASCII непарность:\n" + MyASCII(text=user_txt).to_str_by_unpaired()
 
+    msg.edit_text(txt)
+
+
+def on_encode_hex(update: Update, context: CallbackContext):
+    query: CallbackQuery = update.callback_query
+    msg: Message = query.message
+    reply_to: Message = msg.reply_to_message
+
+    user_txt = reply_to.text
+    txt = MyHex(MyBinary(text=user_txt)).to_hex_text()
+    msg.edit_text(txt)
+
+
+def on_decode_hex(update: Update, context: CallbackContext):
+    query: CallbackQuery = update.callback_query
+    msg: Message = query.message
+    reply_to: Message = msg.reply_to_message
+
+    user_txt = reply_to.text
+    txt = MyHex(hex_text=user_txt).binary.to_text()
     msg.edit_text(txt)
 
 
@@ -125,6 +145,10 @@ callback_handlers = {
 
     str(decode_encoded_by_ascii): on_decode_ascii_by,
     str(decode_encoded_by_binary): on_decode_ascii_by,
+
+    str(encode_hex): on_encode_hex,
+
+    str(decode_hex): on_decode_hex,
 }
 
 
