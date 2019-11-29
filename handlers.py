@@ -1,4 +1,4 @@
-import string
+import re
 from number_systems import MyBinary, MyASCII, MyHex
 from telegram.ext import Dispatcher, MessageHandler, Filters, CallbackQueryHandler
 from telegram.update import Update, Message
@@ -15,15 +15,16 @@ def start(update: Update, context: CallbackContext):
     message.reply_text(GREETING)
 
 
-encode_ascii_action, decode_binary, decode_hex = range(3)
+encode_ascii_action, decode_binary, decode_hex, encode_hex = range(4)
 
 
 def on_text_input(update: Update, context: CallbackContext):
     message: Message = update.message
 
     keyboard = []
-    if message.text:
+    if bool(re.fullmatch(r'[!@#$%^&*(),.?":{};|<>№A-z0-9]+', message.text)):
         keyboard.append([InlineKeyboardButton("Перевести в ASCII", callback_data=str(encode_ascii_action))])
+        keyboard.append([InlineKeyboardButton("Перевести в 16-систему", callback_data=str(encode_hex))])
 
     if MyBinary.is_binary(message.text):
         keyboard.append(([InlineKeyboardButton("Перевести из ASCII", callback_data=str(decode_binary))]))
@@ -31,7 +32,10 @@ def on_text_input(update: Update, context: CallbackContext):
     if MyHex.is_hex(message.text):
         keyboard.append([InlineKeyboardButton("Перевести из 16-системы", callback_data=str(decode_hex))])
 
-    message.reply_text("Доступные действия:", reply_markup=InlineKeyboardMarkup(keyboard), quote=True)
+    if len(keyboard) != 0:
+        message.reply_text("Доступные действия:", reply_markup=InlineKeyboardMarkup(keyboard), quote=True)
+    else:
+        message.reply_text("Нету доступных действий ( текст должен быть написан латин. буквами):", quote=True)
 
 
 encode_by_pairing_action, encode_by_unpaired_action, ascii_encode_both_action = range(10, 13)
