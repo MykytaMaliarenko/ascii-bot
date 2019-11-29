@@ -1,4 +1,4 @@
-import re
+import string
 from number_systems import MyBinary, MyASCII, MyHex
 from telegram.ext import Dispatcher, MessageHandler, Filters, CallbackQueryHandler
 from telegram.update import Update, Message
@@ -22,7 +22,7 @@ def on_text_input(update: Update, context: CallbackContext):
     message: Message = update.message
 
     keyboard = []
-    if bool(re.fullmatch(r"[A-z]", message.text)):
+    if message.text:
         keyboard.append([InlineKeyboardButton("Перевести в ASCII", callback_data=str(encode_ascii_action))])
 
     if MyBinary.is_binary(message.text):
@@ -90,6 +90,18 @@ def on_decode_ascii(update: Update, context: CallbackContext):
     msg.edit_text("Текст был закодирован с помощтю:", reply_markup=InlineKeyboardMarkup(keyboard))
 
 
+def on_decode_ascii_by(update: Update, context: CallbackContext):
+    query: CallbackQuery = update.callback_query
+    msg: Message = query.message
+    reply_to: Message = msg.reply_to_message
+
+    user_txt = reply_to.text
+    if query.data == str(decode_encoded_by_ascii):
+        txt = MyASCII(binary_text=user_txt).binary.to_text()
+    elif query.data == str(decode_encoded_by_binary):
+        txt = MyBinary(binary_text=user_txt).to_text()
+
+    msg.edit_text(txt)
 
 
 handlers = {
@@ -106,6 +118,9 @@ callback_handlers = {
     str(encode_by_pairing_action): on_encode_ascii_by,
     str(encode_by_unpaired_action): on_encode_ascii_by,
     str(ascii_encode_both_action): on_encode_ascii_by,
+
+    str(decode_encoded_by_ascii): on_decode_ascii_by,
+    str(decode_encoded_by_binary): on_decode_ascii_by,
 }
 
 
