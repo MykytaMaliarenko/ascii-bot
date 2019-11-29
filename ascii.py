@@ -5,8 +5,16 @@ def text_to_binary(text: str) -> list:
     return binary_text
 
 
-def encode_by_pairing(binary_text: list) -> list:
-    encoded = []
+class ASCIIList(list):
+    def __str__(self):
+        res = ""
+        for el in self:
+            res += el + " "
+        return res
+
+
+def encode_by_pairing(binary_text: list) -> ASCIIList:
+    encoded = ASCIIList()
     for elem in binary_text:
         if str(elem).count("1") % 2 == 0:
             encoded.append("0" + elem)
@@ -15,8 +23,8 @@ def encode_by_pairing(binary_text: list) -> list:
     return encoded
 
 
-def encode_by_unpairing(binary_text: list) -> list:
-    encoded = []
+def encode_by_unpaired(binary_text: list) -> ASCIIList:
+    encoded = ASCIIList()
     for elem in binary_text:
         if str(elem).count("1") % 2 != 0:
             encoded.append("0" + elem)
