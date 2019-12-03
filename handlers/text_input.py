@@ -10,7 +10,7 @@ from .encode_ascii import ACTION_ENCODE_ASCII
 
 ENGLISH_TEXT_REGEX = r'^[!@#$%^&*(),.?":{};|<>№A-z0-9\s]+$'
 BINARY_REGEX = r'^[0-1\s]+$'
-HEX_REGEX = r'[0-9A-Ea-e\s]+$'
+HEX_REGEX = r'^[0-9A-Fa-f\s]+'
 
 
 def on_text_input(update: Update, context: CallbackContext):
