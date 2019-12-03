@@ -1,4 +1,5 @@
 from .helpers import prepare_text
+from .ascii import ascii_to_hex
 
 BY_PAIRED, BY_UNPAIRED = range(2)
 
@@ -22,3 +23,8 @@ def text_to_ascii(text: str, mode: int = BY_PAIRED) -> str:
                 res[index] = "0" + res[index]
 
     return " ".join(res)
+
+
+def text_to_hex(text: str) -> str:
+    text = prepare_text(text)
+    return ascii_to_hex(text_to_ascii(text))
