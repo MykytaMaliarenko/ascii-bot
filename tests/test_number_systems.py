@@ -19,7 +19,9 @@ class TestNumberSystems:
         assert converter(input_data).replace(" ", "") == res.replace(" ", "")
 
     def test_ascii_to_text(self):
-        assert True == False
+        converter = np.get_converter(np.ASCII, np.TEXT)
+        input_data = "1100 1011 0110 0001 1111 0100 1110 0101"
+        assert converter(input_data).replace(" ", "") == "Kate".replace(" ", "")
 
     def test_hex_to_binary(self):
         assert True == False
