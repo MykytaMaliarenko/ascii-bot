@@ -1,5 +1,7 @@
 from telegram.ext import Dispatcher, MessageHandler, Filters, CallbackQueryHandler
+
 from .start import start
+from .text_input import on_text_input
 
 text_handlers = {
     "start": start,
@@ -7,7 +9,7 @@ text_handlers = {
 
 button_callback_handlers = {}
 
-default_handler = None
+default_handler = on_text_input
 
 
 def register_handlers(dp: Dispatcher):
