@@ -6,22 +6,22 @@ from .hex import hex_to_binary
 TEXT, ASCII, BINARY, HEX = range(4)
 
 
-def parse(f: int, to: int) -> str:
+def get_id(f: int, to: int) -> str:
     return "{} in {}".format(f, to)
 
 
 converters = {
-    parse(TEXT, ASCII): text_to_ascii,
+    get_id(TEXT, ASCII): text_to_ascii,
 
-    parse(ASCII, HEX): ascii_to_hex,
-    parse(ASCII, TEXT): ascii_to_text,
+    get_id(ASCII, HEX): ascii_to_hex,
+    get_id(ASCII, TEXT): ascii_to_text,
 
-    parse(HEX, BINARY): hex_to_binary,
+    get_id(HEX, BINARY): hex_to_binary,
 
-    parse(BINARY, TEXT): binary_to_text,
-    parse(BINARY, ASCII): binary_to_ascii
+    get_id(BINARY, TEXT): binary_to_text,
+    get_id(BINARY, ASCII): binary_to_ascii
 }
 
 
 def convert(f: int, to: int):
-    return converters[parse(f, to)]
+    return converters[get_id(f, to)]
