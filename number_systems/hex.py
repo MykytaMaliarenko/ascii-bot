@@ -1,41 +1,46 @@
-import re
-from number_systems.binary import MyBinary
-
-HEX_REGEX = r"^[0-9A-Ea-e\s]+$"
-
-
-class MyHex(list):
-    """list of ints"""
-    binary: MyBinary
-
-    def __init__(self, binary: MyBinary = None, hex_text: str = ""):
-        super().__init__()
-        if binary is not None:
-            self.binary = binary
-        elif hex_text:
-            hex_text = hex_text.replace(" ", '')
-            res = ""
-            while len(hex_text) > 0:
-                raw = "{0:b}".format(int(hex_text[:2], 16))
-                if len(raw) < 7:
-                    raw = "0" * (7 - len(raw)) + raw
-                res += raw
-                hex_text = hex_text[2:]
-            self.binary = MyBinary(binary_text=res)
-
-    def to_hex_text(self) -> str:
-        res = ""
-        for el in self.binary.to_int():
-            print(el, " ", chr(el))
-            raw = hex(el)
-            res += raw[raw.index("x") + 1:] + " "
-        return res
-
-    @staticmethod
-    def is_hex(text: str) -> bool:
-        return bool(re.fullmatch(HEX_REGEX, text))
+from .helpers import prepare_text
+from .text import BY_UNPAIRED, BY_PAIRED
+from .binary import binary_to_ascii
 
 
-if __name__ == "__main__":
-    temp = MyHex(binary=MyBinary(text="dsfsfs \nsad"))
-    print(temp.to_hex_text())
+def hex_to_binary(hex_text: str) -> str:
+    hex_text = prepare_text(hex_text)
+    res = []
+
+    while len(hex_text) > 0:
+        t = hex_text[:2]
+        t = int(t, 16)
+        t = "{0:b}".format(t)
+        if len(t) < 8:
+            t = "0" * (8 - len(t)) + t
+        res.append(t)
+        hex_text = hex_text[2:]
+
+    return " ".join(res)
+
+
+def hex_to_ascii(hex_text: str, mode: int = BY_PAIRED) -> str:
+    hex_text = prepare_text(hex_text)
+    res = []
+
+    while len(hex_text) > 0:
+        t = hex_text[:2]
+        t = int(t, 16)
+        t = "{0:b}".format(t)
+        if len(t) < 7:
+            t = "0" * (7 - len(t)) + t
+
+        if t.count("1") % 2 == 0:
+            if mode == BY_PAIRED:
+                t = "0" + t
+            else:
+                t = "1" + t
+        else:
+            if mode == BY_PAIRED:
+                t = "1" + t
+            else:
+                t = "0" + t
+        res.append(t)
+        hex_text = hex_text[2:]
+
+    return " ".join(res)

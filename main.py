@@ -1,10 +1,8 @@
 import os
 import json
-
 import logging
 
 from telegram.ext import Updater, CommandHandler, MessageHandler, Filters
-
 import handlers
 
 ENV_FILE = "env.json"

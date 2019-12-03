@@ -1,65 +1,36 @@
-import re
-
-BINARY_REGEX = r"^[0-1\s]+$"
-
-
-class MyBinary(list):
-    """list of unicodes"""
-    data: list
-
-    def __init__(self, text: str = "", binary_text: str = "", ascii_text: str = ""):
-        super().__init__()
-        self.data = []
-
-        if text:
-            for char in text:
-                self.data.append(ord(char))
-        elif binary_text:
-            binary_text = binary_text.replace(" ", "")
-            while len(binary_text) > 0:
-                self.data.append(int(binary_text[:7], 2))
-                binary_text = binary_text[7:]
-        elif ascii_text:
-            ascii_text = ascii_text.replace(" ", "")
-            while len(ascii_text) > 0:
-                self.data.append(int(ascii_text[:8], 2))
-                ascii_text = ascii_text[8:]
-
-    def to_int(self) -> list:
-        return self.data
-
-    def to_text(self) -> str:
-        res = ""
-        for elem in self.data:
-            res += chr(elem)
-        return res
-
-    def __str__(self):
-        res = ""
-        for el in self.data:
-            raw = "{0:b}".format(el)
-            if len(raw) < 7:
-                raw = "0" * (7 - len(raw)) + raw
-
-            res += raw + " "
-        return res
-
-    def to_binary_list(self) -> list:
-        res = []
-        for el in self.data:
-            raw = "{0:b}".format(el)
-            if len(raw) < 7:
-                raw = "0" * (7 - len(raw)) + raw
-
-            res.append(raw)
-        return res
-
-    @staticmethod
-    def is_binary(text: str) -> bool:
-        return bool(re.fullmatch(BINARY_REGEX, text))
+from .helpers import prepare_text
+from .text import BY_UNPAIRED, BY_PAIRED
 
 
-if __name__ == "__main__":
-    binary = MyBinary(text="dsfsfs \nsad")
-    binary_txt = str(binary)
-    print(binary.to_text())
+def binary_to_text(binary: str) -> str:
+    binary = prepare_text(binary)
+    res = []
+
+    while len(binary) > 0:
+        t = binary[:7]
+        t = int(t, 2)
+        res.append(chr(t))
+        binary = binary[7:]
+
+    return "".join(res)
+
+
+def binary_to_ascii(binary: str, mode: int = BY_PAIRED) -> str:
+    binary = prepare_text(binary)
+    res = []
+
+    while len(binary) > 0:
+        t = binary[:7]
+        if t.count("1") % 2 == 0:
+            if mode == BY_PAIRED:
+                res.append("0" + t)
+            else:
+                res.append("1" + t)
+        else:
+            if mode == BY_PAIRED:
+                res.append("1" + t)
+            else:
+                res.append("0" + t)
+        binary = binary[7:]
+
+    return " ".join(res)
