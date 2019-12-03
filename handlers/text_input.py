@@ -4,7 +4,7 @@ from telegram import Message, Update, InlineKeyboardButton, InlineKeyboardMarkup
 from telegram.ext import CallbackContext
 
 from .decode_binary import ACTION_DECODE_BINARY
-from .deocde_hex import ACTION_DECODE_HEX
+from .decode_hex import ACTION_DECODE_HEX
 from .encode_ascii import ACTION_ENCODE_ASCII
 
 
