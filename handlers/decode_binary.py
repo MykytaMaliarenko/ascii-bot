@@ -37,10 +37,17 @@ def decode_binary_encoded_by(update: Update, context: CallbackContext):
     elif query.data == ACTION_DECODE_ASCII:
         text = ns.get_converter(ns.ASCII, ns.TEXT)(user_txt)
 
+    keyboard = [
+        [
+            InlineKeyboardButton("Перевести в 16-ричную систему", callback_data=ACTION_DECODE_ASCII),
+        ],
+    ]
+
     msg.edit_text(text)
 
 
 button_callback_handlers = {
+    ACTION_DECODE_BINARY: decode_binary,
     ACTION_DECODE_ASCII: decode_binary_encoded_by,
     ACTION_DECODE_EASY_BINARY: decode_binary_encoded_by,
 }

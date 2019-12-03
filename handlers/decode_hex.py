@@ -20,8 +20,8 @@ def decode_hex(update: Update, context: CallbackContext):
         ],
     ]
 
-    msg.edit_text("ASCII:\n{}".format(ns.get_converter(ns.HEX, ns.ASCII)(user_txt)),
-                  reply_markup=InlineKeyboardMarkup(keyboard))
+    msg.edit_text("ASCII:\n{}".format(ns.get_converter(ns.HEX, ns.ASCII)(user_txt)))
+    query.edit_message_reply_markup(InlineKeyboardMarkup(keyboard))
 
 
 def decode_binary(update: Update, context: CallbackContext):
@@ -36,5 +36,6 @@ def decode_binary(update: Update, context: CallbackContext):
 
 
 button_callback_handlers = {
+    ACTION_DECODE_HEX: decode_hex,
     ACTION_DECODE_ASCII: decode_binary,
 }

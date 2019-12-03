@@ -51,7 +51,7 @@ def encode_ascii_by(update: Update, context: CallbackContext):
     ]
 
     msg.edit_text(txt)
-    msg.edit_reply_markup(reply_markyp=InlineKeyboardMarkup(keyboard))
+    query.edit_message_reply_markup(InlineKeyboardMarkup(keyboard))
 
 
 def encode_ascii_to_hex(update: Update, context: CallbackContext):
@@ -85,6 +85,7 @@ def encode_ascii_to_hex(update: Update, context: CallbackContext):
 
 
 button_callback_handlers = {
+    ACTION_ENCODE_ASCII: encode_ascii,
     ACTION_ENCODE_ASCII_BY_PAIRED: encode_ascii_by,
     ACTION_ENCODE_ASCII_BY_UNPAIRED: encode_ascii_by,
     ACTION_ENCODE_ASCII_BY_BOTH: encode_ascii_by,
