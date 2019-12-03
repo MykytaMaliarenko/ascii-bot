@@ -3,6 +3,7 @@ from telegram.ext import Dispatcher, MessageHandler, Filters, CallbackQueryHandl
 from .start import start
 from .text_input import on_text_input
 from .encode_ascii import button_callback_handlers as encode_ascii_button_callback_handlers
+from .decode_binary import button_callback_handlers as decode_binary_button_callback_handlers
 
 text_handlers = {
     "start": start,
@@ -10,6 +11,7 @@ text_handlers = {
 
 button_callback_handlers = {}
 button_callback_handlers.update(encode_ascii_button_callback_handlers)
+button_callback_handlers.update(decode_binary_button_callback_handlers)
 
 default_handler = on_text_input
 
