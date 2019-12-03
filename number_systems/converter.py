@@ -1,4 +1,4 @@
-from .text import text_to_ascii
+from .text import text_to_ascii, BY_PAIRED, BY_UNPAIRED
 from .ascii import ascii_to_hex, ascii_to_text
 from .binary import binary_to_ascii, binary_to_text
 from .hex import hex_to_binary
@@ -23,5 +23,5 @@ converters = {
 }
 
 
-def convert(f: int, to: int):
+def get_converter(f: int, to: int):
     return converters[get_id(f, to)]
