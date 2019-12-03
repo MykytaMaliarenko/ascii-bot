@@ -29,4 +29,4 @@ def on_text_input(update: Update, context: CallbackContext):
     if len(keyboard) != 0:
         message.reply_text("Доступные действия:", reply_markup=InlineKeyboardMarkup(keyboard), quote=True)
     else:
-        message.reply_text("Нету доступных действий(текст должен быть написан латин. буквами)", quote=True)
+        message.reply_text("Нету доступных действий(текст должен быть написан латинскими буквами)", quote=True)

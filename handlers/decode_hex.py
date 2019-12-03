@@ -20,22 +20,24 @@ def decode_hex(update: Update, context: CallbackContext):
         ],
     ]
 
-    msg.edit_text("ASCII:\n{}".format(ns.get_converter(ns.HEX, ns.ASCII)(user_txt)))
+    msg.edit_text("2-ичная:\n{}".format(ns.get_converter(ns.HEX, ns.BINARY)(user_txt)))
     query.edit_message_reply_markup(InlineKeyboardMarkup(keyboard))
 
 
-def decode_binary(update: Update, context: CallbackContext):
+def decode_ascii(update: Update, context: CallbackContext):
     query: CallbackQuery = update.callback_query
     msg: Message = query.message
 
     user_txt: str = msg.text
     user_txt = user_txt.replace(" ", "")
+    user_txt = user_txt.replace("\n", "")
+    user_txt = user_txt[user_txt.index(":") + 1:]
 
-    msg.edit_reply_markup(reply_markup=InlineKeyboardMarkup([]))
+    query.edit_message_reply_markup(reply_markup=InlineKeyboardMarkup([]))
     msg.reply_text(ns.get_converter(ns.ASCII, ns.TEXT)(user_txt), quote=True)
 
 
 button_callback_handlers = {
     ACTION_DECODE_HEX: decode_hex,
-    ACTION_DECODE_ASCII: decode_binary,
+    ACTION_DECODE_ASCII: decode_ascii,
 }
